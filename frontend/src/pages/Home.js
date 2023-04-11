@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { Link } from 'react-router-dom';
 
 function Home() {
 
@@ -14,10 +15,10 @@ function Home() {
         setEmployees(result.data);
         // console.log(result.data);
     }
-  return (
+    return (
     <div className="container">
         <div className="py-4">
-        <table className="table bolder shadow">
+        <table className="table border shadow">
             <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -41,7 +42,9 @@ function Home() {
                             <td>{employee.phone}</td>
                             <td>
                                 <button className="btn btn-primary mx-2">View</button>
-                                <button className="btn btn-outline-primary mx-2">Edit</button>
+                                <Link className="btn btn-outline-primary mx-2"
+                                to={`/editEmployee/${employee.id}`}>
+                                    Edit</Link>
                                 <button className="btn btn-danger mx-2">Delete</button>
                             </td>
                         </tr>
