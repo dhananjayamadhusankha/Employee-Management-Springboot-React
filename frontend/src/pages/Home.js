@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import { Link, useParams } from 'react-router-dom';
 
 function Home() {
 
     const [employees, setEmployees] = useState([]);
+
+    const {id} = useParams();
 
     useEffect(() => {
         loadEmployees();
@@ -14,10 +17,16 @@ function Home() {
         setEmployees(result.data);
         // console.log(result.data);
     }
-  return (
+
+    const deleteEmployee = async (id) => {
+        await axios.delete(`http://localhost:9191/employee/${id}`)
+        loadEmployees()
+    }
+
+    return (
     <div className="container">
         <div className="py-4">
-        <table className="table bolder shadow">
+        <table className="table border shadow">
             <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -40,9 +49,12 @@ function Home() {
                             <td>{employee.nic}</td>
                             <td>{employee.phone}</td>
                             <td>
-                                <button className="btn btn-primary mx-2">View</button>
-                                <button className="btn btn-outline-primary mx-2">Edit</button>
-                                <button className="btn btn-danger mx-2">Delete</button>
+                                <Link className="btn btn-primary mx-2" to={`/viewEmployee/${employee.id}`}>View</Link>
+                                <Link className="btn btn-outline-primary mx-2"
+                                to={`/editEmployee/${employee.id}`}>
+                                    Edit</Link>
+                                <button className="btn btn-danger mx-2"
+                                onClick={() => deleteEmployee(employee.id)}>Delete</button>
                             </td>
                         </tr>
                     ))
