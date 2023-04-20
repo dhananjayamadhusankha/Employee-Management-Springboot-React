@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function Home() {
 
     const [employees, setEmployees] = useState([]);
 
-    const {id} = useParams();
+    // const {id} = useParams();
 
     useEffect(() => {
         loadEmployees();
@@ -27,6 +27,8 @@ function Home() {
     <div className="container">
         <div className="py-4">
         <table className="table border shadow">
+        {console.log("data")}
+
             <thead>
                 <tr>
                     <th scope="col">#</th>

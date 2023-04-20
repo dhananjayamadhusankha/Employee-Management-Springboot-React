@@ -20,7 +20,6 @@ function App() {
         <Route exact path="/editEmployee/:id" element={<EditEmployee/>} />
         <Route exact path="/viewEmployee/:id" element={<ViewEmployee/>} />
       </Routes>
-      <Home />
       </Router>
     </div>
   );

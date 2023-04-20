@@ -16,6 +16,14 @@ function EditEmployee() {
         phone:"",
     })
 
+    const [error, setError] = useState({
+        name:"",
+        address:"",
+        nationality:"",
+        nic:"",
+        phone:"",
+    });
+
     const { name, address, nationality, nic, phone } = employee
 
     const onInputChange = (e) => {
@@ -28,8 +36,10 @@ function EditEmployee() {
     
     const onSubmit = async (e) => {
         e.preventDefault();
-        await axios.put(`http://localhost:9191/employee/${id}`, employee);
-        navigate("/")
+        if (validateFields()) {
+            await axios.put(`http://localhost:9191/employee/${id}`, employee);
+            navigate("/")
+        }
     }
 
     const loadEmployee = async () => {
@@ -37,11 +47,58 @@ function EditEmployee() {
         setEmployee(result.data)
     }
 
+    const validateFields = () => {
+        let isValid = true;
+        let nameError = "";
+        let mobileError = "";
+        let nationalityError = "";
+        let addressError= "";
+        let nicError = "";
+
+        // Mobile number validation
+        const mobileRegex = /^(?:7|0|(?:\+94))[0-9]{9,10}$/;
+        if (!mobileRegex.test(phone)) {
+            isValid = false;
+            mobileError = "Please Enter a Valid Mobile Number";
+        }
+
+        // NIC validation
+        const nicRegex = /^([0-9]{9}[v|V]|[0-9]{12})$/;
+        if (!nicRegex.test(nic)) {
+            isValid = false;
+            nicError = "Please Enter a Valid NIC Number";
+        }
+
+        // Name validation
+        const nameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
+        if (!nameRegex.test(name)) {
+            isValid = false;
+            nameError = "Please Enter a Valid Name";
+        }
+
+
+        //Nationality validation
+        if (nationality.length==0) {
+            isValid = false;
+            nationalityError = "Please Enter Nationality";
+        }
+
+        //Address validation
+        if (address.length==0) {
+            isValid = false;
+            addressError = "Please Enter Address";
+        }
+
+        setError({ phone: mobileError, nic: nicError, name: nameError ,nationality:nationalityError,address:addressError});
+        return isValid;
+    };
+
+
     return (
     <div className='container'>
         <div className='raw'>
             <div className='col-md-6 offset-md-3 border rounded p-4 mt-2 shadow'>
-                <h2 className='text-center m-4'>Register Employee</h2>
+                <h2 className='text-center m-4'>Edit Employee</h2>
 
                 <form onSubmit={(e) => onSubmit(e)}>
                 <div className='mb-3'>
@@ -49,6 +106,9 @@ function EditEmployee() {
                         Name
                     </label>
                     <input className='form-control' type={'text'} placeholder='Enter your name' name='name' value={name} onChange={(e) => onInputChange(e)} />
+                    {error.name && (
+                                <div className="text-danger fw-semibold ">{error.name}</div>
+                    )}
                 </div>
 
                 <div className='mb-3'>
@@ -56,6 +116,9 @@ function EditEmployee() {
                         Address
                     </label>
                     <input className='form-control' type={'text'} placeholder='Enter your address' name='address' value={address} onChange={(e) => onInputChange(e)} />
+                    {error.address && (
+                                <div className="text-danger fw-semibold ">{error.address}</div>
+                    )}
                 </div>
 
                 <div className='mb-3'>
@@ -63,6 +126,9 @@ function EditEmployee() {
                         Nationality
                     </label>
                     <input className='form-control' type={'text'} placeholder='Enter your nationality' name='nationality' value={nationality} onChange={(e) => onInputChange(e)} />
+                    {error.nationality && (
+                                <div className="text-danger fw-semibold ">{error.nationality}</div>
+                    )}
                 </div>
 
                 <div className='mb-3'>
@@ -70,6 +136,9 @@ function EditEmployee() {
                         NIC
                     </label>
                     <input className='form-control' type={'text'} placeholder='Enter your nic' name='nic' value={nic} onChange={(e) => onInputChange(e)} />
+                    {error.nic && (
+                                <div className="text-danger fw-semibold ">{error.nic}</div>
+                    )}
                 </div>
 
                 <div className='mb-3'>
@@ -77,6 +146,9 @@ function EditEmployee() {
                         Phone
                     </label>
                     <input className='form-control' type={'text'} placeholder='Enter your phone' name='phone' value={phone} onChange={(e) => onInputChange(e)} />
+                    {error.phone && (
+                                <div className="text-danger fw-semibold ">{error.phone}</div>
+                    )}
                 </div>
                 
                 <button type='submit' className='btn btn-outline-primary'>Submit</button>
