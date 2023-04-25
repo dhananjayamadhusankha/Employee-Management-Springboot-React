@@ -37,6 +37,9 @@ function Home() {
                     <th scope="col">Nationality</th>
                     <th scope="col">NIC</th>
                     <th scope="col">Phone</th>
+                    <th scope="col">Birthday</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Gender</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
@@ -50,6 +53,9 @@ function Home() {
                             <td>{employee.nationality}</td>
                             <td>{employee.nic}</td>
                             <td>{employee.phone}</td>
+                            <td>{employee.birthday}</td>
+                            <td>{employee.age}</td>
+                            <td>{employee.gender}</td>
                             <td>
                                 <Link className="btn btn-primary mx-2" to={`/viewEmployee/${employee.id}`}>View</Link>
                                 <Link className="btn btn-outline-primary mx-2"

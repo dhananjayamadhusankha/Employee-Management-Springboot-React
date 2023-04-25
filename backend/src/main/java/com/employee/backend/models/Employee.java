@@ -2,6 +2,8 @@ package com.employee.backend.models;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 public class Employee {
     @Id
@@ -12,6 +14,9 @@ public class Employee {
     private String address;
     private String nationality;
     private String nic;
+    private LocalDate birthday;
+    private int age;
+    private String gender;
     private String phone;
 
     public long getId() {
@@ -52,6 +57,30 @@ public class Employee {
 
     public void setNic(String nic) {
         this.nic = nic;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getPhone() {
