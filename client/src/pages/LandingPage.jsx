@@ -88,16 +88,6 @@ export default function LandingPage() {
             >
               Employee List
             </Typography>
-            <Typography
-              variant="h5"
-              align="center"
-              color="text.secondary"
-              paragraph
-            >
-              To remake our greatest albums list, we tabulated Top 50 Albums
-              lists from more than 300 artists, producers, critics,
-              music-industry figures.
-            </Typography>
             <Stack
               sx={{ pt: 4 }}
               direction="row"
@@ -157,15 +147,15 @@ export default function LandingPage() {
                       <center>{Album.title}</center>
                     </Typography>
                     <Typography>
-                      <span style={{ fontWeight: "bold" }}>Artist</span> -{" "}
+                      <span style={{ fontWeight: "bold" }}>Name</span> -{" "}
                       {Album.name}
                       <br />
-                      <span style={{ fontWeight: "bold" }}>Genre</span> -{" "}
+                      <span style={{ fontWeight: "bold" }}>Address</span> -{" "}
                       {Album.address}
                       <br />
                       <span style={{ fontWeight: "bold" }}>
-                        Release Date
-                      </span> - {Album.birthday}
+                        NIC
+                      </span> - {Album.nic}
                       <br />
                     </Typography>
                   </CardContent>

@@ -3,16 +3,15 @@ package com.employee.backend.controller;
 import com.employee.backend.exception.UserNotFoundException;
 import com.employee.backend.models.Employee;
 import com.employee.backend.repository.EmployeeRepository;
+import com.employee.backend.response.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -24,72 +23,6 @@ public class EmployeeController {
 
     @PostMapping("/employee")
     public Employee newEmployee(@RequestBody Employee newEmployee) {
-
-//        String nicNumber = newEmployee.getNic();
-
-//        Boolean isNewCard = false;
-//        int len = nicNumber.length();
-//        int year = 0;
-//        int days = 0;
-//        String gender = "Male";
-//        int dayArray[] = {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-//        int month = 0;
-//        String BIRTHDAY;
-//        long age = 0;
-//        String birth = null;
-//
-//        if (len == 12) {
-//            isNewCard = true;
-//        }
-//
-//        if (isNewCard) {
-//            year = Integer.parseInt(nicNumber.substring(0, 4));
-//            days = Integer.parseInt(nicNumber.substring(4, 7));
-//        } else {
-//            year = Integer.parseInt(nicNumber.substring(0, 2));
-//            days = Integer.parseInt(nicNumber.substring(2, 5));
-//        }
-//
-//        if (days > 500) {
-//            days = days - 500;
-//            gender = "Female";
-//        }
-//
-//        for (int i = 0; i < dayArray.length; i++) {
-//            if (days > dayArray[i]) {
-//                days = days - dayArray[i];
-//            } else {
-//                month = i + 1;
-//                break;
-//            }
-//        }
-//
-//        if (isNewCard) {
-//            BIRTHDAY = (year + "-" + String.format("%02d", month) + "-" + String.format("%02d", days));
-//        } else {
-//            BIRTHDAY = ((1900 + year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", days));
-//        }
-//
-//        if (BIRTHDAY.matches("((19|2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])")) {
-//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//            simpleDateFormat.setLenient(false);
-//            try {
-//                Date date = simpleDateFormat.parse(BIRTHDAY);
-//                birth = String.valueOf(date);
-//                //Get Birthday to Age
-//                LocalDate startDate = LocalDate.parse((CharSequence) date);
-//                LocalDate endDate = LocalDate.now();
-//                //alternative of LocalDate.now() method
-//                //calculates the amount of time between two specified temporal objects
-//                age = ChronoUnit.YEARS.between(startDate, endDate);
-//            } catch (ParseException e) {
-//                System.out.println("Invalid birthday");
-//            }
-//        }
-//
-//        newEmployee.setAge((int) age);
-//        newEmployee.setGender(gender);
-//        newEmployee.setBirthday(birth);
 
         String nicNumber = newEmployee.getNic();
 
@@ -171,18 +104,30 @@ public class EmployeeController {
         return "Employee with id : " + id + " has been deleted successfully..!";
     }
 
-//    public static int getValues (String birthday) {
-//        if (birthday.matches("((19|2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])")) {
-//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//            simpleDateFormat.setLenient(false);
-//            try {
-//                Date date = simpleDateFormat.parse(birthday);
-//                return 1;
-//            } catch (ParseException e) {
-//                return 0;
-//            }
-//        }else {
-//            return 0;
-//        }
-//    }
+    @GetMapping("/nicCount")
+    public ResponseEntity<Object> getNic(Employee employee) {
+        return ResponseHandler.responseBuilder("NIC Range Here!!!", HttpStatus.OK, employeeRepository.getCountNIC());
+    }
+
+    @GetMapping("/mobileCount")
+    public ResponseEntity<Object> getMobile(Employee employee) {
+        return ResponseHandler.responseBuilder("Mobile Number Range Here!!!", HttpStatus.OK, employeeRepository.getCountMobile());
+    }
+
+    @GetMapping("/genderCount")
+    public ResponseEntity<Object> getGender(Employee employee) {
+        return ResponseHandler.responseBuilder("Gender Range Here!!!", HttpStatus.OK, employeeRepository.getCountGender());
+    }
+
+    @GetMapping("/ageCount")
+    public ResponseEntity<Object> getAge(Employee employee) {
+        return ResponseHandler.responseBuilder("Age Range Here!!!", HttpStatus.OK, employeeRepository.getCountAge());
+    }
+
+    @GetMapping("/birthYearCount")
+    public ResponseEntity<Object> getBirthYear(Employee employee) {
+        return ResponseHandler.responseBuilder("Birth Year Range Here!!!", HttpStatus.OK, employeeRepository.getCountBirthYear());
+    }
+
+
 }

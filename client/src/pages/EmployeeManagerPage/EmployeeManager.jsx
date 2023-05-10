@@ -3,9 +3,7 @@ import Table from "../../components/Table";
 import axios from "axios";
 import MyButton from "../../components/button/Button";
 import { AiFillPlusCircle } from "react-icons/ai";
-import { BsThreeDots } from "react-icons/bs";
 import Popupform from "../../components/popup/Popupform";
-import PopupMenu from "../../components/PopupMenu";
 import AddAlbumForm from "../../components/popup/AddEmployeeForm";
 import "./EmployeeManager.css";
 import EditEmployeeForm from "../../components/popup/EditEmployeeForm";
@@ -76,24 +74,25 @@ const EmployeeManager = () => {
     }
   };
 
-  // const filterData = (Employees, searchKey) => {
-  //   const result = Employees.filter(
-  //     (Employees) =>
-  //       Employees.title.toLowerCase().includes(searchKey) ||
-  //       Employees.artist.toLowerCase().includes(searchKey) ||
-  //       Employees.genre.toLowerCase().includes(searchKey)
-  //   );
-  //   setEmployees(result);
-  // };
+  const filterData = (Employees, searchKey) => {
+    const result = Employees.filter(
+      (Employees) =>
+        Employees.name.toLowerCase().includes(searchKey) ||
+        Employees.nic.toLowerCase().includes(searchKey) ||
+        Employees.address.toLowerCase().includes(searchKey)
+    );
+    setEmployees(result);
+  };
 
-  // const handleSearchArea = (e) => {
-  //   const searchKey = e.currentTarget.value.toLowerCase();
-  //   axios.get("/album/").then((res) => {
-  //     if (res.data.success) {
-  //       filterData(res.data.Employees, searchKey);
-  //     }
-  //   });
-  // };
+  const handleSearchArea = (e) => {
+    const searchKey = e.currentTarget.value.toLowerCase();
+    axios.get("/employees").then((res) => {
+      if (res.data.success) {
+        filterData(res.data.Employees, searchKey);
+        console.log(res.data.Employees);
+      }
+    });
+  };
 
   //table columns
   const columns = [
@@ -116,17 +115,17 @@ const EmployeeManager = () => {
     {
       field: "nationality",
       headerName: "Nationality",
-      width: 250,
+      width: 150,
     },
     {
       field: "nic",
       headerName: "NIC",
-      width: 250,
+      width: 150,
     },
     {
       field: "birthday",
       headerName: "Bithday",
-      width: 250,
+      width: 150,
     },
     {
       field: "id",
@@ -180,7 +179,7 @@ const EmployeeManager = () => {
           type="search"
           className="search-input"
           placeholder="Search.."
-          // onChange={handleSearchArea}
+          onChange={handleSearchArea}
         />
         <MyButton
           text={"Add New Employee"}
