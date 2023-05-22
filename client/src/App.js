@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import EmployeeManager from "./pages/EmployeeManagerPage/EmployeeManager";
+import Employee from "./pages/EmployeeManagerPage/Employee";
 import LandingPage from "./pages/LandingPage";
 import axios from "axios";
 
@@ -9,7 +10,8 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/employee" element={<EmployeeManager />} />
+        <Route path="/dashboard" element={<EmployeeManager />} />
+        <Route path="/employee" element={<Employee />} />
         <Route path="/" element={<LandingPage />} />
       </Routes>
     </BrowserRouter>

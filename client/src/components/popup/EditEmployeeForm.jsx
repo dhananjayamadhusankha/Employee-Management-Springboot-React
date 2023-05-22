@@ -7,6 +7,8 @@ const EditEmployeeForm = ({ onHide, id }) => {
   const [nationality, setnationality] = useState("");
   const [nic, setnic] = useState("");
   const [phone, setphone] = useState("");
+  const [error, setError] = useState("");
+  const [clicked, setClicked] = useState(false);
 
   var nationalities = [
     {
@@ -22,6 +24,56 @@ const EditEmployeeForm = ({ onHide, id }) => {
       id : 3
     },
   ];
+
+  const validateFields = () => {
+    let isValid = true;
+    let nameError = "";
+    let mobileError = "";
+    let nationalityError = "";
+    let addressError = "";
+    let nicError = "";
+
+    // Mobile number validation
+    const mobileRegex = /^(?:7|0|(?:\+94))[0-9]{9,10}$/;
+    if (!mobileRegex.test(phone)) {
+      isValid = false;
+      mobileError = "Please Enter a Valid Mobile Number";
+    }
+
+    // NIC validation
+    const nicRegex = /^([0-9]{9}[v|V]|[0-9]{12})$/;
+    if (!nicRegex.test(nic)) {
+      isValid = false;
+      nicError = "Please Enter a Valid NIC Number";
+    }
+
+    // Name validation
+    const nameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
+    if (!nameRegex.test(name)) {
+      isValid = false;
+      nameError = "Please Enter a Valid Name";
+    }
+
+    //Nationality validation
+    if (nationality.length === 0) {
+      isValid = false;
+      nationalityError = "Please Enter Nationality";
+    }
+
+    //Address validation
+    if (address.length === 0) {
+      isValid = false;
+      addressError = "Please Enter Address";
+    }
+     setError({
+      phone: mobileError,
+      nic: nicError,
+      name: nameError,
+      nationality: nationalityError,
+      address: addressError,
+    });
+    return isValid;
+  };
 
   //Get specific employee
   const GetEmployee = async () => {
@@ -44,8 +96,10 @@ const EditEmployeeForm = ({ onHide, id }) => {
   }, []);
 
   const editAlbum = async (e) => {
+    setClicked(true);
     e.preventDefault();
-    await axios
+    if (validateFields() && clicked) {
+      await axios
       .put(`/employee/${id}`, {
         name: name,
         address: address,
@@ -61,6 +115,9 @@ const EditEmployeeForm = ({ onHide, id }) => {
       .catch((err) => {
         console.log(err)
       });
+    }else {
+      alert("Already clicked..!");
+    }
   };
 
 
@@ -79,6 +136,9 @@ const EditEmployeeForm = ({ onHide, id }) => {
             required
           />
           <label for="floatingInput">Employee Name</label>
+          {error.name && (
+            <div className="text-danger fw-semibold ">{error.name}</div>
+          )}
         </div>
 
         <div className="form-floating mb-3">
@@ -93,6 +153,9 @@ const EditEmployeeForm = ({ onHide, id }) => {
             required
           />
           <label for="floatingInput">Address</label>
+           {error.address && (
+            <div className="text-danger fw-semibold ">{error.address}</div>
+          )}
         </div>
 
         <div className="form-outline mb-3">
@@ -112,6 +175,11 @@ const EditEmployeeForm = ({ onHide, id }) => {
                 {nationality.nationality}
               </option>
             ))}
+            {error.nationality && (
+              <div className="text-danger fw-semibold ">
+                {error.nationality}
+              </div>
+            )}
           </select>
         </div>
 
@@ -127,6 +195,9 @@ const EditEmployeeForm = ({ onHide, id }) => {
             required
           />
           <label for="floatingInput">NIC</label>
+          {error.nic && (
+            <div className="text-danger fw-semibold ">{error.nic}</div>
+          )}
         </div>
 
         <div className="form-floating mb-5">
@@ -141,6 +212,9 @@ const EditEmployeeForm = ({ onHide, id }) => {
             required
           />
           <label for="floatingInput">Phone Number</label>
+          {error.phone && (
+            <div className="text-danger fw-semibold ">{error.phone}</div>
+          )}
         </div>
 
         <hr />

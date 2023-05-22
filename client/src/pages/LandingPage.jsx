@@ -17,8 +17,7 @@ import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import albumImg from "../img/gg.jpg";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -40,16 +39,20 @@ export default function LandingPage() {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/employee');
-  } 
+    navigate("/dashboard");
+  };
+
+  const handleClickManage = () => {
+    navigate("/employee");
+  };
 
   //Get All Albums
   const GetAllEmployees = async () => {
     await axios
       .get("/employees")
       .then((res) => {
-          const allAlbums = res.data;
-          setAlbums(allAlbums);
+        const allAlbums = res.data;
+        setAlbums(allAlbums);
       })
       .catch((err) => {
         console.error(err);
@@ -61,7 +64,7 @@ export default function LandingPage() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppBar position="relative" style={{background:"#28282B"}}>
+      <AppBar position="relative" style={{ background: "#28282B" }}>
         <Toolbar>
           <AlbumIcon sx={{ mr: 3 }} />
           <Typography variant="h6" color="inherit" noWrap>
@@ -96,6 +99,23 @@ export default function LandingPage() {
             >
               <Button
                 onClick={handleClick}
+                style={{
+                  background: "black",
+                  color: "white",
+                  fontSize: "15px",
+                  backdropFilter: ` blur(20px)`,
+                  borderRadius: "15px",
+                  paddingLeft: "20px",
+                  paddingRight: "20px",
+                  boxShadow:
+                    "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+                }}
+                variant="contained"
+              >
+                Dashboard
+              </Button>
+              <Button
+                onClick={handleClickManage}
                 style={{
                   background: "black",
                   color: "white",
@@ -153,9 +173,8 @@ export default function LandingPage() {
                       <span style={{ fontWeight: "bold" }}>Address</span> -{" "}
                       {Album.address}
                       <br />
-                      <span style={{ fontWeight: "bold" }}>
-                        NIC
-                      </span> - {Album.nic}
+                      <span style={{ fontWeight: "bold" }}>NIC</span> -{" "}
+                      {Album.nic}
                       <br />
                     </Typography>
                   </CardContent>
