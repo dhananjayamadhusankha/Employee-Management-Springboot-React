@@ -129,56 +129,6 @@ const Dashboard = () => {
     },
   ];
 
-  const handleAgeFilter = (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    const filtered = filteredData.filter(
-      (item) => item.age && item.age.toString().includes(searchTerm)
-    );
-    setFilteredData(filtered);
-  };
-
-  const handleGenderFilter = (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    const filtered = filteredData.filter(
-      (item) =>
-        item.gender && item.gender.toString().toLowerCase().includes(searchTerm)
-    );
-    setFilteredData(filtered);
-  };
-
-  const handleNameFilter = (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    const filtered = filteredData.filter(
-      (item) => item.name && item.name.toLowerCase().includes(searchTerm)
-    );
-    setFilteredData(filtered);
-  };
-
-  const handleMobileFilter = (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    const filtered = filteredData.filter(
-      (item) => item.phone && item.phone.toLowerCase().includes(searchTerm)
-    );
-    setFilteredData(filtered);
-  };
-
-  const handleAddressFilter = (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    const filtered = filteredData.filter(
-      (item) => item.address && item.address.toLowerCase().includes(searchTerm)
-    );
-    setFilteredData(filtered);
-  };
-
-  const handleNationalityFilter = (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    const filtered = filteredData.filter(
-      (item) =>
-        item.nationality && item.nationality.toLowerCase().includes(searchTerm)
-    );
-    setFilteredData(filtered);
-  };
-
   //Bar Chart for Ages
   const barChart = {
     labels: barChartLabels,
