@@ -3,6 +3,7 @@ import axios from "axios";
 import DataTable from "react-data-table-component";
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from "@coreui/react";
 import { Link } from "react-router-dom";
+import swal from "sweetalert";
 
 const UsersTable = () => {
   const [users, setUsers] = useState([]);
@@ -22,18 +23,56 @@ const UsersTable = () => {
   };
 
   const deleteUser = async (id) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this user?"
-    );
-    if (confirmed) {
-      try {
-        await axios.delete(`/employee/${id}`);
-        loadUsers();
-      } catch (error) {
-        console.error("Error deleting user:", error);
-      }
-    }
+    await axios.delete(`/employee/${id}`);
+    loadUsers();
   };
+
+  const deleteUsersWithSwal = async (id) => {
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this imaginary file!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        deleteUser(id);
+        swal("Poof! Your imaginary file has been deleted!", {
+          icon: "success",
+        });
+      } else {
+        swal("Your imaginary file is safe!");
+      }
+    });
+  };
+
+  // const deleteUser = async (id) => {
+  //   const confirmed = window.confirm(
+  //     "Are you sure you want to delete this user?"
+  //   );
+  //   if (confirmed) {
+  //     try {
+  //       await axios.delete(`/employee/${id}`);
+  //       loadUsers();
+  //     } catch (error) {
+  //       console.error("Error deleting user:", error);
+  //     }
+  //   }
+  // };
+
+  // const deleteUser = async (id) => {
+  //   const confirmed = window.confirm(
+  //     "Are you sure you want to delete this user?"
+  //   );
+  //   if (confirmed) {
+  //     try {
+  //       await axios.delete(`/employee/${id}`);
+  //       loadUsers();
+  //     } catch (error) {
+  //       console.error("Error deleting user:", error);
+  //     }
+  //   }
+  // };
 
   const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(searchText.toLowerCase())
@@ -92,7 +131,7 @@ const UsersTable = () => {
           </Link>
           <button
             className="mx-1 text-danger bg-transparent border-0 text-decoration-underline fw-bold"
-            onClick={() => deleteUser(row.id)}
+            onClick={() => deleteUsersWithSwal(row.id)}
           >
             Delete
           </button>

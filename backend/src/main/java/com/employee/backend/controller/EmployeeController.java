@@ -1,9 +1,9 @@
 package com.employee.backend.controller;
 
+
 import com.employee.backend.exception.UserNotFoundException;
 import com.employee.backend.models.Employee;
 import com.employee.backend.repository.EmployeeRepository;
-import com.employee.backend.response.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +52,7 @@ public class EmployeeController {
         }
 
 
-        // calculate the birth date based on the days code
+        // calculate the birthday based on the days code
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyDDD");
         LocalDate birthDate = LocalDate.parse(String.format("%04d%03d", birthYear, days), formatter);
 
@@ -103,49 +103,24 @@ public class EmployeeController {
         employeeRepository.deleteById(id);
         return "Employee with id : " + id + " has been deleted successfully..!";
     }
-//
-//    @GetMapping("/nicCount")
-//    public ResponseEntity<Object> getNic(Employee employee) {
-//        return ResponseHandler.responseBuilder("NIC Range Here!!!", HttpStatus.OK, employeeRepository.getCountNIC());
-//    }
-//
-//    @GetMapping("/mobileCount")
-//    public ResponseEntity<Object> getMobile(Employee employee) {
-//        return ResponseHandler.responseBuilder("Mobile Number Range Here!!!", HttpStatus.OK, employeeRepository.getCountMobile());
-//    }
-//
-//    @GetMapping("/genderCount")
-//    public ResponseEntity<Object> getGender(Employee employee) {
-//        return ResponseHandler.responseBuilder("Gender Range Here!!!", HttpStatus.OK, employeeRepository.getCountGender());
-//    }
-//
-//    @GetMapping("/ageCount")
-//    public ResponseEntity<Object> getAge(Employee employee) {
-//        return ResponseHandler.responseBuilder("Age Range Here!!!", HttpStatus.OK, employeeRepository.getCountAge());
-//    }
-//
-//    @GetMapping("/birthYearCount")
-//    public ResponseEntity<Object> getBirthYear(Employee employee) {
-//        return ResponseHandler.responseBuilder("Birth Year Range Here!!!", HttpStatus.OK, employeeRepository.getCountBirthYear());
-//    }
 
-//    @GetMapping("/mainSearch")
-//    public ResponseEntity<List<Employee>> employeeMainSearch(
-//            @RequestParam(name = "name", required = false) String name,
-//            @RequestParam(name = "address", required = false) String address,
-//            @RequestParam(name = "phone", required = false) String phone,
-//            @RequestParam(name = "nic", required = false) String nic,
-//            @RequestParam(name = "nationality", required = false) String nationality,
-//            @RequestParam(name = "birthday", required = false) String birthday,
-//            @RequestParam(name = "age", required = false) Integer age,
-//            @RequestParam(name = "gender", required = false) String gender){
-//
-//        List<Employee> mainEmployeeSearch = employeeRepository.employeeMainSearch(name, address, phone, nic, nationality, birthday, age, gender);
-//
-//        if (mainEmployeeSearch.isEmpty()) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        } else {
-//            return new ResponseEntity<>(mainEmployeeSearch, HttpStatus.OK);
-//        }
-//    }
+    @GetMapping("/mainSearch")
+    public ResponseEntity<List<Employee>> searchUsers(
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "address", required = false) String address,
+            @RequestParam(name = "phone", required = false) String phone,
+            @RequestParam(name = "nic", required = false) String nic,
+            @RequestParam(name = "nationality", required = false) String nationality,
+            @RequestParam(name = "birthday", required = false) String birthday,
+            @RequestParam(name = "age", required = false) Integer age,
+            @RequestParam(name = "gender", required = false) String gender){
+
+        List<Employee> filteredUsers = employeeRepository.searchUsers(name, address, phone, nic, nationality, birthday, age, gender);
+
+        if (filteredUsers.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(filteredUsers, HttpStatus.OK);
+        }
+    }
 }

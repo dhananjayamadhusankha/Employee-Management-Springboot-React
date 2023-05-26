@@ -3,27 +3,52 @@ package com.employee.backend.repository;
 import com.employee.backend.models.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
+
 @Repository
+
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
-//    @Query("SELECT * FROM employee WHERE " +
-//            "(:name IS NULL OR userFirstName = :userFirstName) AND "+
+//    @Query(value = "SELECT * FROM employee WHERE " +
+//            "(:name IS NULL OR name = :name) AND "+
 //            "(:address IS NULL OR address = :address) AND "+
 //            "(:nationality IS NULL OR nationality = :nationality) AND "+
 //            "(:nic IS NULL OR nic = :nic) AND "+
 //            "(:phone IS NULL OR phone = :phone) AND "+
 //            "(:birthday IS NULL OR birthday = :birthday) "+
-//            "(:age IS NULL OR age = :age) "+
-//            "(:gender IS NULL OR gender = :gender)")
+//            "(:age IS NULL OR ge = :age) "+
+//            "(:gender IS NULL OR gender = :gender)", nativeQuery = true)
 //    List<Employee> employeeMainSearch(@Param("name") String name, @Param("address") String address,
-//                                  @Param("nationality") String nationality, @Param("nic") String nic,
-//                                  @Param("phone") String phone, @Param("birthday") String birthday,
-//                                  @Param("age") Integer age, @Param("gender") String gender);
+//                                      @Param("nationality") String nationality, @Param("nic") String nic,
+//                                      @Param("phone") String phone, @Param("birthday") String birthday,
+//                                      @Param("age") Integer age, @Param("gender") String gender);
+
+
+
+//    @Query(value = "SELECT * FROM employee WHERE " +
+//            "(:name IS NULL OR name = :name))", nativeQuery = true)
+//    List<Employee> employeeMainSearch(@Param("name") String name);
+
+
+
+    //Native Queries
+    @Query(value = "SELECT * FROM employee WHERE " + "(:name IS NULL OR name = :name) AND "
+            + "(:address IS NULL OR address = :address) AND " + "(:phone IS NULL OR phone = :phone) AND "
+            + "(:nic IS NULL OR nic = :nic) AND " + "(:nationality IS NULL OR nationality = :nationality) AND "
+            + "(:birthday IS NULL OR birthday = :birthday) AND " + "(:age IS NULL OR age = :age) AND "
+            + "(:gender IS NULL OR gender = :gender)", nativeQuery = true)
+    List<Employee> searchUsers(@Param("name") String userName, @Param("address") String userAddress,
+                           @Param("phone") String userMobile, @Param("nic") String userNic,
+                           @Param("nationality") String userNationality, @Param("birthday") String userBirthday,
+                           @Param("age") Integer userAge, @Param("gender") String userGender);
+
+}
+//    @Query ("SELECT e FROM Employee e")
+//    List<Employee> employeeMainSearch();
 
 
 //    //NIC New or Old Count
@@ -90,4 +115,3 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 //            + "ORDER BY age_range ASC",nativeQuery = true)
 //    List<Object> getCountBirthYear();
 
-}

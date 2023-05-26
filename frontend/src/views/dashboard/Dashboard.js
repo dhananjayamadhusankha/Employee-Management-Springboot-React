@@ -27,6 +27,47 @@ const Dashboard = () => {
 
   const [resetPaginationToggle] = useState(false);
 
+  const [sortName, setsortName] = useState("");
+  const [sortAge, setsortAge] = useState("");
+  const [sortNationality, setsortNationality] = useState("");
+  const [sortGender, setsortGender] = useState("");
+  const [sortMobile, setsortMobile] = useState("");
+  const [sortAddress, setsortAddress] = useState("");
+
+  const filterValues = () => {
+    const temp = data.filter((item) => {
+      const nameMatch =
+        sortName === "" ||
+        item.name.toLowerCase().includes(sortName.toLowerCase());
+      const ageMatch = sortAge === "" || item.age.toString().includes(sortAge);
+      const genderMatch =
+        sortGender === "" ||
+        item.gender.toLowerCase().includes(sortGender.toLowerCase());
+      const addressMatch =
+        sortAddress === "" ||
+        item.address.toLowerCase().includes(sortAddress.toLowerCase());
+      const nationalityMatch =
+        sortNationality === "" ||
+        item.nationality.toLowerCase().includes(sortNationality.toLowerCase());
+      const mobileMatch =
+        sortMobile === "" || item.mobile.toString().includes(sortMobile);
+
+      return (
+        nameMatch &&
+        ageMatch &&
+        mobileMatch &&
+        addressMatch &&
+        nationalityMatch &&
+        genderMatch
+      );
+    });
+    setFilteredData(temp);
+  };
+
+  useEffect(() => {
+    filterValues();
+  }, [sortName, sortAddress, sortGender, sortAge, sortNationality, sortMobile]);
+
   const fetchData = async () => {
     const response = await axios.get("/mainSearch");
     setData(response.data);
@@ -90,7 +131,7 @@ const Dashboard = () => {
 
   const handleAgeFilter = (e) => {
     const searchTerm = e.target.value.toLowerCase();
-    const filtered = data.filter(
+    const filtered = filteredData.filter(
       (item) => item.age && item.age.toString().includes(searchTerm)
     );
     setFilteredData(filtered);
@@ -98,7 +139,7 @@ const Dashboard = () => {
 
   const handleGenderFilter = (e) => {
     const searchTerm = e.target.value.toLowerCase();
-    const filtered = data.filter(
+    const filtered = filteredData.filter(
       (item) =>
         item.gender && item.gender.toString().toLowerCase().includes(searchTerm)
     );
@@ -107,16 +148,15 @@ const Dashboard = () => {
 
   const handleNameFilter = (e) => {
     const searchTerm = e.target.value.toLowerCase();
-    const filtered = data.filter(
-      (item) =>
-        item.full_name && item.full_name.toLowerCase().includes(searchTerm)
+    const filtered = filteredData.filter(
+      (item) => item.name && item.name.toLowerCase().includes(searchTerm)
     );
     setFilteredData(filtered);
   };
 
   const handleMobileFilter = (e) => {
     const searchTerm = e.target.value.toLowerCase();
-    const filtered = data.filter(
+    const filtered = filteredData.filter(
       (item) => item.phone && item.phone.toLowerCase().includes(searchTerm)
     );
     setFilteredData(filtered);
@@ -124,7 +164,7 @@ const Dashboard = () => {
 
   const handleAddressFilter = (e) => {
     const searchTerm = e.target.value.toLowerCase();
-    const filtered = data.filter(
+    const filtered = filteredData.filter(
       (item) => item.address && item.address.toLowerCase().includes(searchTerm)
     );
     setFilteredData(filtered);
@@ -132,7 +172,7 @@ const Dashboard = () => {
 
   const handleNationalityFilter = (e) => {
     const searchTerm = e.target.value.toLowerCase();
-    const filtered = data.filter(
+    const filtered = filteredData.filter(
       (item) =>
         item.nationality && item.nationality.toLowerCase().includes(searchTerm)
     );
@@ -328,7 +368,7 @@ const Dashboard = () => {
                   <input
                     type="text"
                     placeholder="Search by Name"
-                    onChange={handleNameFilter}
+                    onChange={(e) => setsortName(e.target.value)}
                     className="form-control"
                   />
                 </div>
@@ -336,7 +376,7 @@ const Dashboard = () => {
                   <input
                     type="number"
                     placeholder="Search by Age"
-                    onChange={handleAgeFilter}
+                    onChange={(e) => setsortAge(e.target.value)}
                     className="form-control"
                   />
                 </div>
@@ -344,7 +384,7 @@ const Dashboard = () => {
                   <input
                     type="text"
                     placeholder="Search by Gender"
-                    onChange={handleGenderFilter}
+                    onChange={(e) => setsortGender(e.target.value)}
                     className="form-control"
                   />
                 </div>
@@ -352,7 +392,7 @@ const Dashboard = () => {
                   <input
                     type="number"
                     placeholder="Search by Mobile"
-                    onChange={handleMobileFilter}
+                    onChange={(e) => setsortMobile(e.target.value)}
                     className="form-control"
                   />
                 </div>
@@ -360,7 +400,7 @@ const Dashboard = () => {
                   <input
                     type="text"
                     placeholder="Search by Address"
-                    onChange={handleAddressFilter}
+                    onChange={(e) => setsortAddress(e.target.value)}
                     className="form-control"
                   />
                 </div>
@@ -368,7 +408,7 @@ const Dashboard = () => {
                   <input
                     type="text"
                     placeholder="Search by Nationality"
-                    onChange={handleNationalityFilter}
+                    onChange={(e) => setsortNationality(e.target.value)}
                     className="form-control"
                   />
                 </div>
