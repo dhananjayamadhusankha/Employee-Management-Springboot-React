@@ -15,7 +15,6 @@ import CIcon from "@coreui/icons-react";
 import { cilMenu } from "@coreui/icons";
 
 import { AppBreadcrumb } from "./index";
-import { logo } from "src/assets/brand/logo";
 
 const AppHeader = () => {
   const dispatch = useDispatch();
