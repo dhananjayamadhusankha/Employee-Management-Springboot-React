@@ -13,13 +13,15 @@ const ViewEmployee = React.lazy(() =>
 const UpdateField = React.lazy(() =>
   import("./views/employee/updateFields/UpdateFields")
 );
+const AppRegister = React.lazy(() => import("./components/AppRegister"));
 
 const routes = [
-  { path: "/dashboard", name: "Dashboard", element: Dashboard },
+  { path: "admin/dashboard", name: "Dashboard", element: Dashboard },
   { path: "/users", name: " Manage Users", element: ViewEmployee, exact: true },
   { path: "/users/add", name: "Add Users", element: AddEmployee },
   { path: "/users/update", name: "Update Users", element: UpdateEmployee },
   { path: "/users/view", name: "View Users", element: ViewEmployee },
+  { path: "/users/register", name: "Register Users", element: AppRegister },
   {
     path: "/users/updateData/UpdateField/:id",
     name: "Edit User",
