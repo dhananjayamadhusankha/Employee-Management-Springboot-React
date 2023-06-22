@@ -10,6 +10,7 @@ import {
   CHeaderToggler,
   CNavLink,
   CNavItem,
+  CButton,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { cilMenu } from "@coreui/icons";
@@ -19,6 +20,12 @@ import { AppBreadcrumb } from "./index";
 const AppHeader = () => {
   const dispatch = useDispatch();
   const sidebarShow = useSelector((state) => state.sidebarShow);
+  const isLoggedIn = useSelector((state) => state.isLoggedIn); // Add this line, assuming you have a 'isLoggedIn' state in your Redux store
+
+  const handleLogout = () => {
+    // Add your logout logic here
+    // dispatch({ type: "logout" });
+  };
 
   return (
     <CHeader position="sticky" className="mb-4">
@@ -39,7 +46,23 @@ const AppHeader = () => {
             </CNavLink>
           </CNavItem>
         </CHeaderNav>
-        <CHeaderNav></CHeaderNav>
+        <CHeaderNav>
+          {isLoggedIn ? (
+            <CButton color="dark" onClick={handleLogout}>
+              Logout
+            </CButton>
+          ) : (
+            <>
+              <CButton color="dark" variant="outline" to="/login">
+                Login
+              </CButton>
+              <span className="mx-2"></span>
+              <CButton color="dark" to="/users/add">
+                Register
+              </CButton>
+            </>
+          )}
+        </CHeaderNav>
       </CContainer>
       <CHeaderDivider />
       <CContainer fluid>

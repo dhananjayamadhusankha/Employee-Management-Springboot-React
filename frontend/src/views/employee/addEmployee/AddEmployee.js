@@ -1,31 +1,45 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-// import { CButton } from "@coreui/react";
 
 export default function AddEmployee() {
-  const [user, SetUser] = useState({
+  const [user, setUser] = useState({
     name: "",
-    phone: "",
-    nationality: "",
+    email: "",
     address: "",
+    nationality: "",
     nic: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const [error, setError] = useState({
     name: "",
-    phone: "",
-    nationality: "",
+    email: "",
     address: "",
+    nationality: "",
     nic: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const [successMessage, setSuccessMessage] = useState("");
 
-  const { name, phone, nationality, address, nic } = user;
+  const {
+    name,
+    email,
+    address,
+    nationality,
+    nic,
+    phone,
+    password,
+    confirmPassword,
+  } = user;
 
   const onInputChange = (e) => {
-    SetUser({ ...user, [e.target.name]: e.target.value });
+    setUser({ ...user, [e.target.name]: e.target.value });
   };
 
   const onSubmit = async (e) => {
@@ -33,9 +47,9 @@ export default function AddEmployee() {
     if (validateFields()) {
       try {
         await axios.post("/employee", user);
-        setSuccessMessage("Employee added successfully!"); // Show success message
+        setSuccessMessage("Employee added successfully!");
         setTimeout(() => {
-          window.location.href = "/users/view"; // Navigate to user details page after 1 seconds
+          window.location.href = "/users/view";
         }, 1000);
       } catch (error) {
         console.error("Error adding employee:", error);
@@ -43,86 +57,83 @@ export default function AddEmployee() {
     }
   };
 
-  // var nationalities = [
-  //   {
-  //     nationality: "Sinhala",
-  //     id: 1,
-  //   },
-  //   {
-  //     nationality: "Tamil",
-  //     id: 2,
-  //   },
-  //   {
-  //     nationality: "Muslim",
-  //     id: 3,
-  //   },
-  // ];
-
   const validateFields = () => {
     let isValid = true;
-    let nameError = "";
-    let phoneError = "";
-    let nationalityError = "";
-    let addressError = "";
-    let nicError = "";
-
-    // phone number validation
-    const phoneRegex = /^[0-9]{10}$/;
-    if (!phoneRegex.test(phone)) {
-      isValid = false;
-      phoneError = "Please Enter a Valid phone Number!";
-    }
-
-    // NIC validation
-    if (
-      nic.substring(2, 5) <= 366 ||
-      (nic.substring(2, 5) >= 501 && nic.substring(2, 5) <= 866)
-    ) {
-      const nicRegex = /^([0-9]{9}[v|V]|[0-9]{12})$/;
-      if (!nicRegex.test(nic)) {
-        isValid = false;
-        nicError = "Invalid NIC Number!";
-      }
-    } else {
-      isValid = false;
-      nicError = "Invalid NIC Number!";
-    }
+    let errors = {
+      name: "",
+      email: "",
+      address: "",
+      nationality: "",
+      nic: "",
+      phone: "",
+      password: "",
+      confirmPassword: "",
+    };
 
     // Name validation
     const nameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/;
     if (!nameRegex.test(name)) {
       isValid = false;
-      nameError = "Please Enter a Valid Name!";
+      errors.name = "Please enter a valid name";
     }
 
-    //Nationality validation
-    if (nationality.length === 0) {
+    // Email validation
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
       isValid = false;
-      nationalityError = "Please Enter Nationality!";
+      errors.email = "Please enter a valid email address";
     }
 
-    //Address validation
-    if (address.length === 0) {
+    // Address validation
+    if (address.trim().length === 0) {
       isValid = false;
-      addressError = "Please Enter Address!";
+      errors.address = "Please enter an address";
     }
 
-    setError({
-      phone: phoneError,
-      nic: nicError,
-      name: nameError,
-      nationality: nationalityError,
-      address: addressError,
-    });
+    // Nationality validation
+    if (nationality.trim().length === 0) {
+      isValid = false;
+      errors.nationality = "Please enter nationality";
+    }
+
+    // NIC validation
+    if (nic.trim().length === 0) {
+      isValid = false;
+      errors.nic = "Please enter a NIC number";
+    }
+
+    // Phone number validation
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(phone)) {
+      isValid = false;
+      errors.phone = "Please enter a valid phone number";
+    }
+
+    // Password validation
+    if (password.trim().length === 0) {
+      isValid = false;
+      errors.password = "Please enter a password";
+    }
+
+    // Confirm password validation
+    if (confirmPassword.trim().length === 0) {
+      isValid = false;
+      errors.confirmPassword = "Please confirm the password";
+    } else if (password !== confirmPassword) {
+      isValid = false;
+      errors.confirmPassword = "Passwords do not match";
+    }
+
+    setError(errors);
     return isValid;
   };
 
   return (
     <div className="container">
       <div className="row">
-        <div className=" col-md-6 offset-md-3 border rounded p-4 shadow">
+        <div className="col-md-6 offset-md-3 border rounded p-4 shadow">
           <h2 className="text-center m-4 fw-bold">Add User Details</h2>
-          <form onSubmit={(e) => onSubmit(e)} method="post">
+          <form onSubmit={onSubmit} method="post">
             {successMessage && (
               <div className="alert alert-success" role="alert">
                 {successMessage}
@@ -135,12 +146,27 @@ export default function AddEmployee() {
                 type="text"
                 className="form-control"
                 placeholder="Employee Name"
-                onChange={(e) => onInputChange(e)}
+                onChange={onInputChange}
                 required
               />
               <label htmlFor="floatingInput">Employee Name</label>
               {error.name && (
-                <div className="text-danger fw-semibold ">{error.name}</div>
+                <div className="text-danger fw-semibold">{error.name}</div>
+              )}
+            </div>
+            <div className="form-floating mb-3">
+              <input
+                id="floatingInput"
+                name="email"
+                type="email"
+                className="form-control"
+                placeholder="Email"
+                onChange={onInputChange}
+                required
+              />
+              <label htmlFor="floatingInput">Email</label>
+              {error.email && (
+                <div className="text-danger fw-semibold">{error.email}</div>
               )}
             </div>
             <div className="form-floating mb-3">
@@ -150,51 +176,27 @@ export default function AddEmployee() {
                 type="text"
                 className="form-control"
                 placeholder="Address"
-                onChange={(e) => onInputChange(e)}
+                onChange={onInputChange}
                 required
               />
               <label htmlFor="floatingInput">Address</label>
               {error.address && (
-                <div className="text-danger fw-semibold ">{error.address}</div>
+                <div className="text-danger fw-semibold">{error.address}</div>
               )}
             </div>
-            {/* <div className="form-outline mb-3">
-              <label className="form-label" htmlFor="form8Example5">
-                Nationality
-              </label>
-              <select
-                className="form-select"
-                aria-label="Default select example"
-                id="size"
-                name="size"
-                onChange={(e) => onInputChange(e)}
-              >
-                <option selected>Select nationality</option>
-                {nationalities.map((nationality) => (
-                  <option value={nationality.nationality} key={nationality.id}>
-                    {nationality.nationality}
-                  </option>
-                ))}
-                {error.nationality && (
-                  <div className="text-danger fw-semibold ">
-                    {error.nationality}
-                  </div>
-                )}
-              </select>
-            </div> */}
             <div className="form-floating mb-3">
               <input
                 id="floatingInput"
                 name="nationality"
                 type="text"
                 className="form-control"
-                placeholder="Address"
-                onChange={(e) => onInputChange(e)}
+                placeholder="Nationality"
+                onChange={onInputChange}
                 required
               />
               <label htmlFor="floatingInput">Nationality</label>
               {error.nationality && (
-                <div className="text-danger fw-semibold ">
+                <div className="text-danger fw-semibold">
                   {error.nationality}
                 </div>
               )}
@@ -206,12 +208,12 @@ export default function AddEmployee() {
                 type="text"
                 className="form-control"
                 placeholder="NIC"
-                onChange={(e) => onInputChange(e)}
+                onChange={onInputChange}
                 required
               />
               <label htmlFor="floatingInput">NIC</label>
               {error.nic && (
-                <div className="text-danger fw-semibold ">{error.nic}</div>
+                <div className="text-danger fw-semibold">{error.nic}</div>
               )}
             </div>
             <div className="form-floating mb-5">
@@ -221,12 +223,44 @@ export default function AddEmployee() {
                 type="text"
                 className="form-control"
                 placeholder="Phone Number"
-                onChange={(e) => onInputChange(e)}
+                onChange={onInputChange}
                 required
               />
               <label htmlFor="floatingInput">Phone Number</label>
               {error.phone && (
-                <div className="text-danger fw-semibold ">{error.phone}</div>
+                <div className="text-danger fw-semibold">{error.phone}</div>
+              )}
+            </div>
+            <div className="form-floating mb-5">
+              <input
+                id="floatingInput"
+                name="password"
+                type="password"
+                className="form-control"
+                placeholder="Password"
+                onChange={onInputChange}
+                required
+              />
+              <label htmlFor="floatingInput">Password</label>
+              {error.password && (
+                <div className="text-danger fw-semibold">{error.password}</div>
+              )}
+            </div>
+            <div className="form-floating mb-5">
+              <input
+                id="floatingInput"
+                name="confirmPassword"
+                type="password"
+                className="form-control"
+                placeholder="Confirm Password"
+                onChange={onInputChange}
+                required
+              />
+              <label htmlFor="floatingInput">Confirm Password</label>
+              {error.confirmPassword && (
+                <div className="text-danger fw-semibold">
+                  {error.confirmPassword}
+                </div>
               )}
             </div>
             <button type="submit" className="btn btn-dark mb-4">

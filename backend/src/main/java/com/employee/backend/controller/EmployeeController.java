@@ -4,11 +4,16 @@ import com.employee.backend.exception.UserNotFoundException;
 import com.employee.backend.models.Employee;
 import com.employee.backend.repository.EmployeeRepository;
 import com.employee.backend.response.ResponseHandler;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -76,7 +81,15 @@ public class EmployeeController {
 
         return employeeRepository.save(newEmployee);
 
-//        return "Registration successful";
+    }
+
+    private boolean isAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("admin"))) {
+            return true;
+        }
+        return false;
     }
 
     @GetMapping("/employees")
@@ -139,18 +152,40 @@ public class EmployeeController {
         return employeeRepository.findByEmailAndPassword(email, password);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody Employee loginForm){
-        String email = loginForm.getEmail();
-        String password = loginForm.getPassword();
+//    @PostMapping("/login")
+//    public ResponseEntity<Object> login(@RequestBody Employee loginForm){
+//        String email = loginForm.getEmail();
+//        String password = loginForm.getPassword();
+//
+//        Employee employee = authenticateEmployee(email, password);
+//        if (employee != null){
+//            return ResponseHandler.responseBuilder("Employee Login Successfully.", HttpStatus.OK, authenticateEmployee(email, password));
+//        } else {
+//            Map<String, String> errorResponse = new HashMap<>();
+//            errorResponse.put("message", "Request User Not Found");
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+//        }
+//    }
 
-        Employee employee = authenticateEmployee(email, password);
-        if (employee != null){
-            return ResponseHandler.responseBuilder("Employee Login Successfully.", HttpStatus.OK, authenticateEmployee(email, password));
+    @PostMapping("/login")
+    public ResponseEntity<Object> handleLogin(@RequestBody Employee loginRequest) {
+        // Perform authentication logic here
+        // Assuming you have a UserService to handle user authentication
+        boolean isAuthenticated = loginRequest.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
+
+        if (isAuthenticated) {
+            // Authentication succeeded
+            String role = loginRequest.getUserRole(loginRequest.getEmail());
+            if (role.equals("admin")) {
+                // Return admin role in the response
+                return ResponseEntity.ok().body(new Employee("admin"));
+            } else {
+                // Return user role in the response
+                return ResponseEntity.ok().body(new Employee("user"));
+            }
         } else {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Request User Not Found");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+            // Authentication failed
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("Authentication failed"));
         }
     }
 }

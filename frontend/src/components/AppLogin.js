@@ -1,7 +1,8 @@
 import Footer from "../template/Footer";
 import "./style.css";
-import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState } from "react";
+// import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Alert from "react-bootstrap/Alert";
 
 function AppLogin() {
@@ -51,6 +52,7 @@ function AppLogin() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
 
   const handleLogin = async () => {
     // Send a request to the server to authenticate the user
@@ -65,16 +67,14 @@ function AppLogin() {
     const data = await response.json();
 
     if (response.ok) {
-      // User authentication succeeded
       if (data.role === "admin") {
-        // Redirect to the admin dashboard
         window.location.href = "/admin/dashboard";
       } else {
-        // Redirect to the user page
         window.location.href = "/user";
       }
     } else {
-      // User authentication failed, handle error
+      console.error("Login failed:", data.error);
+      setError(true);
     }
   };
 
@@ -85,15 +85,13 @@ function AppLogin() {
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-md-9 col-lg-6 col-xl-5">
               <img
-                src={
-                  "https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-                }
+                src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
                 className="img-fluid"
                 alt="Sample image"
               />
             </div>
             <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-              <form onSubmit={Submit}>
+              <form>
                 <div className="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                   <p className="lead fw-normal mb-0 me-3">Sign in with</p>
                   <button
@@ -125,13 +123,12 @@ function AppLogin() {
                 <div className="form-outline mb-4">
                   <input
                     type="email"
-                    id="email"
-                    name="email"
+                    value={email}
                     className="form-control form-control-lg"
                     placeholder="Enter a valid email address"
-                    onChange={handleEmailChange}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
-                  <label className="form-label" for="form3Example3">
+                  <label className="form-label" htmlFor="form3Example3">
                     Email address
                   </label>
                 </div>
@@ -139,21 +136,20 @@ function AppLogin() {
                 <div className="form-outline mb-3">
                   <input
                     type="password"
-                    id="password"
-                    name="email"
+                    value={password}
                     className="form-control form-control-lg"
                     placeholder="Enter password"
-                    onChange={handlePasswordChange}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
-                  <label className="form-label" for="form3Example4">
+                  <label className="form-label" htmlFor="form3Example4">
                     Password
                   </label>
                 </div>
 
-                {error === true ? (
-                  <Alert variant="danger">Login failed</Alert>
-                ) : (
-                  ""
+                {error && (
+                  <Alert variant="danger">
+                    Login failed. Please check your credentials.
+                  </Alert>
                 )}
 
                 <div className="d-flex justify-content-between align-items-center">
@@ -164,7 +160,7 @@ function AppLogin() {
                       value=""
                       id="form2Example3"
                     />
-                    <label className="form-check-label" for="form2Example3">
+                    <label className="form-check-label" htmlFor="form2Example3">
                       Remember me
                     </label>
                   </div>
@@ -176,6 +172,7 @@ function AppLogin() {
                 <div className="text-center text-lg-start mt-4 pt-2">
                   <button
                     type="submit"
+                    onClick={handleLogin}
                     className="btn btn-primary btn-lg"
                     style={{ paddingLeft: "2.5rem", paddingRight: "2.5rem" }}
                   >
@@ -183,7 +180,7 @@ function AppLogin() {
                   </button>
                   <p className="small fw-bold mt-2 pt-1 mb-0">
                     Don't have an account?{" "}
-                    <Link to={/users/register} className="link-danger">
+                    <Link to="/users/register" className="link-danger">
                       Register
                     </Link>
                   </p>
