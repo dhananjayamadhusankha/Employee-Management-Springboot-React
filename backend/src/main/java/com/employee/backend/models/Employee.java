@@ -13,7 +13,7 @@ public class Employee {
     private String name;
     private String email;
     private String password;
-    private String roleType;
+    private String userRole;
     private String address;
     private String nationality;
     private String nic;
@@ -21,6 +21,9 @@ public class Employee {
     private int age;
     private String gender;
     private String phone;
+
+//    public Employee(String admin) {
+//    }
 
     public long getId() {
         return id;
@@ -54,17 +57,22 @@ public class Employee {
         this.password = password;
     }
 
-    public String getRoleType() {
-        return roleType;
+    public String getUserRole() {
+        return userRole;
     }
 
-    public void setRoleType(String roleType) {
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
+
+
+//    public void setRoleType(String roleType) {
 //        if (roleType == null || roleType.isEmpty()) {
 //            this.roleType = "EMPLOYEE_ROLE";
 //        } else {
 //            this.roleType = roleType;
 //        }
-    }
+//    }
 
     public String getAddress() {
         return address;
