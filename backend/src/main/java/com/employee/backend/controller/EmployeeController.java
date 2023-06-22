@@ -1,18 +1,21 @@
 package com.employee.backend.controller;
 
-
 import com.employee.backend.exception.UserNotFoundException;
 import com.employee.backend.models.Employee;
 import com.employee.backend.repository.EmployeeRepository;
+import com.employee.backend.response.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
@@ -67,7 +70,13 @@ public class EmployeeController {
         newEmployee.setAge(age);
         newEmployee.setGender(gender);
 
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        String hashedPassword = passwordEncoder.encode(newEmployee.getPassword());
+//        newEmployee.setPassword(hashedPassword);
+
         return employeeRepository.save(newEmployee);
+
+//        return "Registration successful";
     }
 
     @GetMapping("/employees")
@@ -84,15 +93,17 @@ public class EmployeeController {
     @PutMapping("/employee/{id}")
     public Employee updateEmployee(@RequestBody Employee newEmployee, @PathVariable Long id){
         return  employeeRepository.findById(id)
-                .map(employee -> {
+            .map(employee -> {
 
-                    employee.setName(newEmployee.getName());
-                    employee.setAddress(newEmployee.getAddress());
-                    employee.setNationality(newEmployee.getNationality());
-                    employee.setNic(newEmployee.getNic());
-                    employee.setPhone(newEmployee.getPhone());
-                    return employeeRepository.save(employee);
-                }).orElseThrow(() -> new UserNotFoundException(id));
+                employee.setName(newEmployee.getName());
+                employee.setEmail(newEmployee.getEmail());
+                employee.setPassword(newEmployee.getPassword());
+                employee.setAddress(newEmployee.getAddress());
+                employee.setNationality(newEmployee.getNationality());
+                employee.setNic(newEmployee.getNic());
+                employee.setPhone(newEmployee.getPhone());
+                return employeeRepository.save(employee);
+            }).orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @DeleteMapping("/employee/{id}")
@@ -121,6 +132,25 @@ public class EmployeeController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(filteredUsers, HttpStatus.OK);
+        }
+    }
+
+    public Employee authenticateEmployee(String email, String password) {
+        return employeeRepository.findByEmailAndPassword(email, password);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Object> login(@RequestBody Employee loginForm){
+        String email = loginForm.getEmail();
+        String password = loginForm.getPassword();
+
+        Employee employee = authenticateEmployee(email, password);
+        if (employee != null){
+            return ResponseHandler.responseBuilder("Employee Login Successfully.", HttpStatus.OK, authenticateEmployee(email, password));
+        } else {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", "Request User Not Found");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
     }
 }

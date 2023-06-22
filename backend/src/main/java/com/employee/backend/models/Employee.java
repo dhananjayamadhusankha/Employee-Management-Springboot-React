@@ -11,6 +11,9 @@ public class Employee {
     @Column(nullable = false, updatable = false)
     private long id;
     private String name;
+    private String email;
+    private String password;
+    private String roleType;
     private String address;
     private String nationality;
     private String nic;
@@ -33,6 +36,34 @@ public class Employee {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(String roleType) {
+//        if (roleType == null || roleType.isEmpty()) {
+//            this.roleType = "EMPLOYEE_ROLE";
+//        } else {
+//            this.roleType = roleType;
+//        }
     }
 
     public String getAddress() {
